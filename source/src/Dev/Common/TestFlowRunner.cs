@@ -1,6 +1,7 @@
 ﻿using System;
 using Testflow.Common;
 using Testflow.DesignTime;
+using Testflow.Common.I18nUtil;
 using Testflow.Modules;
 using Testflow.Runtime;
 
@@ -43,6 +44,27 @@ namespace Testflow
             return _runnerInst;
         }
 
+        /// <summary>
+        /// 获取或创建当前AppDomain下的FlowRunner实例
+        /// </summary>
+        /// <returns></returns>
+        public static TestflowRunner GetInstance()
+        {
+            if (null != _runnerInst)
+            {
+                return _runnerInst;
+            }
+            lock (_instLock)
+            {
+                if (null != _runnerInst)
+                {
+                    I18N i18N = I18N.GetInstance(CommonConst.I18nName);
+                    throw new TestflowInternalException(TestflowErrorCode.InternalError, i18N.GetStr("PlatformNotInitialized"));
+                }
+            }
+            return _runnerInst;
+        }
+
         private static void CheckIfExistDifferentRunner(TestflowRunnerOptions options)
         {
             if (null != _runnerInst && !_runnerInst.Option.Equals(options))
@@ -63,6 +85,13 @@ namespace Testflow
         protected TestflowRunner(TestflowRunnerOptions options)
         {
             this.Option = options;
+            this.Context = new TestflowContext();
+            I18NOption i18NOption = new I18NOption(typeof (TestflowRunner).Assembly,
+                "Testflow.Resources.locale.i18n_common_cn", "Testflow.Resources.locale.i18n_common_en")
+            {
+                Name = CommonConst.I18nName
+            };
+            I18N i18N = I18N.GetInstance(i18NOption);
         }
 
         #region 服务接口
@@ -84,7 +113,7 @@ namespace Testflow
         /// <summary>
         /// 组件接口加载模块
         /// </summary>
-        public abstract IComInterfaceLoader ComInterfaceLoader { get; }
+        public abstract IComInterfaceManager ComInterfaceManager { get; }
 
         /// <summary>
         /// 配置管理模块
@@ -123,20 +152,15 @@ namespace Testflow
 
         #endregion
 
-        #region 辅助组件接口
-
-        /// <summary>
-        /// 国际化组件
-        /// </summary>
-        public abstract I18NInterface I18n { get; }
-
-        #endregion
-
-
         /// <summary>
         /// 运行器选项
         /// </summary>
-        public TestflowRunnerOptions Option;
+        public TestflowRunnerOptions Option { get; }
+
+        /// <summary>
+        /// Testflow平台的上下文信息
+        /// </summary>
+        public TestflowContext Context { get; }
 
         /// <summary>
         /// 初始化框架平台
