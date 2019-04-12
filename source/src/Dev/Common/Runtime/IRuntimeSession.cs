@@ -28,9 +28,29 @@ namespace Testflow.Runtime
         #region Status相关事件
 
         /// <summary>
+        /// 测试生成开始事件
+        /// </summary>
+        event RuntimeDelegate.SessionGenerationAction SessionGenerationStart;
+
+        /// <summary>
+        /// 测试生成中间事件，生成过程中会不间断生成该事件
+        /// </summary>
+        event RuntimeDelegate.SessionGenerationAction SessionGenerationReport;
+
+        /// <summary>
+        /// 测试生成结束事件
+        /// </summary>
+        event RuntimeDelegate.SessionGenerationAction SessionGenerationEnd;
+
+        /// <summary>
+        /// 整个测试工程的测试开始时触发
+        /// </summary>
+        event RuntimeDelegate.SessionStatusAction SessionStart;
+
+        /// <summary>
         /// Events raised when a sequence is start and host receive runtime stauts information. Asynchronous event.
         /// </summary>
-        event RuntimeDelegate.StatusReceivedAction SequenceStarted;
+        event RuntimeDelegate.SequenceStatusAction SequenceStarted;
 
         /// <summary>
         /// Events raised when receive runtime status information. Asynchronous event.
@@ -40,7 +60,7 @@ namespace Testflow.Runtime
         /// <summary>
         /// Events raised when a sequence is over and host receive runtime stauts information. Asynchronous event.
         /// </summary>
-        event RuntimeDelegate.StatusReceivedAction SequenceOver;
+        event RuntimeDelegate.SequenceStatusAction SequenceOver;
 //
 //        /// <summary>
 //        /// Events raised when a sequence is failed and host receive runtime stauts information. Asynchronous event.
@@ -50,7 +70,7 @@ namespace Testflow.Runtime
         /// <summary>
         /// Events raised when a sequence is failed and host receive runtime stauts information. Asynchronous event.
         /// </summary>
-        event RuntimeDelegate.TestSessionOverAction TestOver;
+        event RuntimeDelegate.SessionStatusAction SessionOver;
 
         /// <summary>
         /// 断点命中事件，当某个断点被命中时触发

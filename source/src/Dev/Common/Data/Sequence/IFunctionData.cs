@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Testflow.Common;
 using Testflow.Data.Description;
 
 namespace Testflow.Data.Sequence
@@ -8,7 +9,7 @@ namespace Testflow.Data.Sequence
     /// <summary>
     /// 保存一个步骤中调用的方法信息
     /// </summary>
-    public interface IFunctionData
+    public interface IFunctionData : ICloneableClass<IFunctionData>, ISequenceElement
     {
         /// <summary>
         /// 方法类型
@@ -21,9 +22,9 @@ namespace Testflow.Data.Sequence
         string MethodName { get; set; }
 
         /// <summary>
-        /// 方法所在类的索引号
+        /// 方法所在类
         /// </summary>
-        int ClassTypeIndex { get; set; }
+        ITypeData ClassType { get; set; }
 
         /// <summary>
         /// 方法参数列表信息
@@ -34,7 +35,17 @@ namespace Testflow.Data.Sequence
         /// 该Function的参数配置信息
         /// </summary>
         [XmlIgnore]
-        ISequenceStepParameter Parameters { get; }
+        IParameterDataCollection Parameters { get; set; }
+
+        /// <summary>
+        /// 方法所在类的实例，静态方法时为空
+        /// </summary>
+        string Instance { get; set; }
+
+        /// <summary>
+        /// 保存返回值的变量名
+        /// </summary>
+        string Return { get; set; }
 
         /// <summary>
         /// 方法返回值信息

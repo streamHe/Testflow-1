@@ -5,6 +5,7 @@
     /// </summary>
     public static class CommonConst
     {
+
         /// <summary>
         /// 外部属性的默认扩展参数个数
         /// </summary>
@@ -40,6 +41,34 @@
 
         internal const string I18nName = "LoggerI18N";
 
-        public const int PlatformLogSession = -1;
+        /// <summary>
+        /// 平台日志会话id
+        /// </summary>
+        public const int PlatformLogSession = 1000000;
+
+        /// <summary>
+        /// 平台日志会话id
+        /// </summary>
+        public const int PlatformSession = 1000000;
+
+        /// <summary>
+        /// 测试工程的会话id
+        /// </summary>
+        public const int TestGroupSession = -1;
+
+        /// <summary>
+        /// 广播会话ID
+        /// </summary>
+        public const int BroadcastSession = -10;
+
+        /// <summary>
+        /// Setup序列的id
+        /// </summary>
+        public const int SetupIndex = -1;
+
+        /// <summary>
+        /// Teardown序列的id
+        /// </summary>
+        public const int TeardownIndex = -2;
     }
 }

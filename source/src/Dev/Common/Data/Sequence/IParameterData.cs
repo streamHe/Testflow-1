@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Xml.Serialization;
+using Testflow.Common;
 using Testflow.Data.Description;
 
 namespace Testflow.Data.Sequence
 {
     /// <summary>
-    /// 
+    /// 参数数据类
     /// </summary>
-    public interface IParameterData
+    public interface IParameterData : ICloneableClass<IParameterData>, ISequenceElement
     {
         /// <summary>
         /// 当前ParameterData在ParametorCollection中的索引
@@ -23,9 +24,5 @@ namespace Testflow.Data.Sequence
         /// 当前的值是变量还是值
         /// </summary>
         ParameterType ParameterType { get; set; }
-//        /// <summary>
-//        /// 该参数的Type类型的索引号
-//        /// </summary>
-//        int TypeIndex { get; set; }
     }
 }

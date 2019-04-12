@@ -13,16 +13,11 @@ namespace Testflow.Runtime
         /// <summary>
         /// 断点命中信息
         /// </summary>
-        ICallStack DebugStack { get; }
-
-        /// <summary>
-        /// CPU使用事件，单位为ms
-        /// </summary>
-        ulong ElapsedTime { get; }
+        ICallStack BreakPoint { get; }
 
         /// <summary>
         /// 变量调试信息
         /// </summary>
-        ISerializableMap<string, object> VariableDebugInfo { get; }
+        IDictionary<IVariable, string> WatchDatas { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Testflow.Common;
 using Testflow.DesignTime;
 using Testflow.Common.I18nUtil;
@@ -35,6 +36,7 @@ namespace Testflow
             }
             lock(_instLock)
             {
+                Thread.MemoryBarrier();
                 CheckIfExistDifferentRunner(options);
                 if (null != _runnerInst)
                 {
@@ -59,7 +61,7 @@ namespace Testflow
                 if (null != _runnerInst)
                 {
                     I18N i18N = I18N.GetInstance(CommonConst.I18nName);
-                    throw new TestflowInternalException(TestflowErrorCode.InternalError, i18N.GetStr("PlatformNotInitialized"));
+                    throw new TestflowInternalException(CommonErrorCode.InternalError, i18N.GetStr("PlatformNotInitialized"));
                 }
             }
             return _runnerInst;
@@ -87,7 +89,7 @@ namespace Testflow
             this.Option = options;
             this.Context = new TestflowContext();
             I18NOption i18NOption = new I18NOption(typeof (TestflowRunner).Assembly,
-                "Testflow.Resources.locale.i18n_common_cn", "Testflow.Resources.locale.i18n_common_en")
+                "i18n_common_cn", "i18n_common_en")
             {
                 Name = CommonConst.I18nName
             };
@@ -113,54 +115,54 @@ namespace Testflow
         /// <summary>
         /// 组件接口加载模块
         /// </summary>
-        public abstract IComInterfaceManager ComInterfaceManager { get; }
+        public abstract IComInterfaceManager ComInterfaceManager { get; protected set; }
 
         /// <summary>
         /// 配置管理模块
         /// </summary>
-        public abstract IConfigurationManager ConfigurationManager { get; }
+        public abstract IConfigurationManager ConfigurationManager { get; protected set; }
 
         /// <summary>
         /// 数据持久化模块
         /// </summary>
-        public abstract IDataMaintainer DataMaintainer { get; }
+        public abstract IDataMaintainer DataMaintainer { get; protected set; }
 
         /// <summary>
         /// 引擎控制模块
         /// </summary>
-        public abstract IEngineController EngineController { get; }
+        public abstract IEngineController EngineController { get; protected set; }
 
         /// <summary>
         /// 日志服务模块
         /// </summary>
-        public abstract ILogService LogService { get; }
+        public abstract ILogService LogService { get; protected set; }
 
         /// <summary>
         /// 参数检查模块
         /// </summary>
-        public abstract IParameterChecker ParameterChecker { get; }
+        public abstract IParameterChecker ParameterChecker { get; protected set; }
 
         /// <summary>
         /// 结果管理模块
         /// </summary>
-        public abstract IResultManager ResultManager { get; }
+        public abstract IResultManager ResultManager { get; protected set; }
 
         /// <summary>
         /// 序列管理模块
         /// </summary>
-        public abstract ISequenceManager SequenceManager { get; }
+        public abstract ISequenceManager SequenceManager { get; protected set; }
 
         #endregion
 
         /// <summary>
         /// 运行器选项
         /// </summary>
-        public TestflowRunnerOptions Option { get; }
+        public TestflowRunnerOptions Option { get; protected set; }
 
         /// <summary>
         /// Testflow平台的上下文信息
         /// </summary>
-        public TestflowContext Context { get; }
+        public TestflowContext Context { get; protected set; }
 
         /// <summary>
         /// 初始化框架平台

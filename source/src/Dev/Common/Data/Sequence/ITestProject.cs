@@ -14,6 +14,11 @@ namespace Testflow.Data.Sequence
         ITypeDataCollection TypeDatas { get; set; }
 
         /// <summary>
+        /// 模型版本号
+        /// </summary>
+        string ModelVersion { get; set; }
+
+        /// <summary>
         /// 测试序列组关联的所有程序集
         /// </summary>
         IAssemblyInfoCollection Assemblies { get; set; }
@@ -51,7 +56,7 @@ namespace Testflow.Data.Sequence
         /// <summary>
         /// 所有测试组中的参数配置
         /// </summary>
-        IList<IParameterDataCollection> SequenceParameters { get; set; }
+        IList<IParameterDataCollection> SequenceGroupParameters { get; set; }
 
         /// <summary>
         /// 测试序列组的TearDown模块

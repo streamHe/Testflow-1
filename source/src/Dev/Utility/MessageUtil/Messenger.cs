@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using Testflow.Common;
 using Testflow.Utility.I18nUtil;
 using Testflow.Utility.MessageUtil.Messengers;
@@ -42,7 +43,7 @@ namespace Testflow.Utility.MessageUtil
         }
 
         /// <summary>
-        /// 使用option获取已配置的信使类，如果不存在抛出异常
+        /// 使用option获取已配置的信使类
         /// </summary>
         public static Messenger GetMessenger(MessengerOption option)
         {
@@ -54,6 +55,7 @@ namespace Testflow.Utility.MessageUtil
             }
             lock (_lock)
             {
+                Thread.MemoryBarrier();
                 if (null != (messenger = _messengers.FirstOrDefault(item => item.Option.Equals(option))))
                 {
                     return messenger;
@@ -85,7 +87,7 @@ namespace Testflow.Utility.MessageUtil
             return null != _messengers.FirstOrDefault(item => item.Option.Equals(option));
         }
 
-        private MessageDispatcher _messageDispatcher;
+        private readonly MessageDispatcher _messageDispatcher;
 
         /// <summary>
         /// 常见Messanger抽象类
@@ -97,9 +99,10 @@ namespace Testflow.Utility.MessageUtil
             // 初始化i18n模块
             I18NOption i18NOption = new I18NOption(typeof(Messenger).Assembly, "i18n_messenger_zh", "i18n_messenger_en")
             {
-                Name = Constants.MessengerName
+                Name = UtilityConstants.MessengerName
             };
             I18N.InitInstance(i18NOption);
+            this._messageDispatcher = new MessageDispatcher(this);
         }
 
         /// <summary>
@@ -131,7 +134,21 @@ namespace Testflow.Utility.MessageUtil
         {
             foreach (IMessageConsumer messageConsumer in consumers)
             {
-                this.MessageReceived += messageConsumer.Handle;
+                //                this.MessageReceived += messageConsumer.Handle;
+                _messageDispatcher.RegisterConsumer(messageConsumer);
+            }
+         
+        }
+
+        /// <summary>
+        /// 取消注册消费者，数据接收端调用
+        /// </summary>
+        public void UnregisterConsumer(params IMessageConsumer[] consumers)
+        {
+            foreach (IMessageConsumer messageConsumer in consumers)
+            {
+//                this.MessageReceived -= messageConsumer.Handle;
+                _messageDispatcher.UnregisterConsumer(messageConsumer);
             }
         }
 
@@ -139,7 +156,14 @@ namespace Testflow.Utility.MessageUtil
         /// 接收信息，未添加高阶参数配置，后续再更新
         /// </summary>
         /// <param name="targetTypes">目标数据类型</param>
-        internal abstract IMessage Receive(params Type[] targetTypes);
+        public abstract IMessage Receive(params Type[] targetTypes);
+
+        /// <summary>
+        /// 查看当前Message但是不取出
+        /// </summary>
+        /// <param name="targetTypes"></param>
+        /// <returns></returns>
+        public abstract IMessage Peak(params Type[] targetTypes);
 
         /// <summary>
         /// 发送消息，未添加高阶配置，后续再更新

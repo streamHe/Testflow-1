@@ -50,7 +50,6 @@ namespace Testflow.Modules
         /// <summary>
         /// 创建空白的FunctionData
         /// </summary>
-        /// <param name="funcInterface"></param>
         /// <returns></returns>
         IFunctionData CreateFunctionData(IFuncInterfaceDescription funcInterface);
 
@@ -129,22 +128,69 @@ namespace Testflow.Modules
         /// <param name="target">序列化的目标</param>
         /// <param name="param">额外参数</param>
         void Serialize(ISequenceGroup sequenceGroup, SerializationTarget target, params string[] param);
-
+        
         /// <summary>
-        /// 反序列化测试工程
+        /// 加载测试工程
         /// </summary>
         /// <param name="source">反序列化的源</param>
         /// <param name="param">额外参数</param>
-        ITestProject DeserializeTestProject(SerializationTarget source, params string[] param);
+        ITestProject LoadTestProject(SerializationTarget source, params string[] param);
 
         /// <summary>
-        /// 反序列化测试序列组
+        /// 加载测试序列组
         /// </summary>
         /// <param name="source">反序列化的源</param>
-        /// <param name="param">额外参数</param>
-        ISequenceGroup DeserializeSequenceGroup(SerializationTarget source, params string[] param);
+        /// <param name="param">额外参数，如果是文件需要传入文件路径</param>
+        ISequenceGroup LoadSequenceGroup(SerializationTarget source, params string[] param);
+
+        /// <summary>
+        /// 加载参数配置文件
+        /// </summary>
+        /// <param name="sequenceGroup">加载参数配置的目标序列组</param>
+        /// <param name="forceLoad">是否强制加载，false时如果hash比对不通过会报错</param>
+        /// <param name="param">额外参数，如果是文件需要传入文件路径</param>
+        void LoadParameter(ISequenceGroup sequenceGroup, bool forceLoad, params string[] param);
+
+        /// <summary>
+        /// 运行时序列化
+        /// </summary>
+        /// <param name="testProject">待序列化的TestProject</param>
+        string RuntimeSerialize(ITestProject testProject);
+
+        /// <summary>
+        /// 运行时序列化
+        /// </summary>
+        /// <param name="sequenceGroup">待序列化的SequenceGroup</param>
+        string RuntimeSerialize(ISequenceGroup sequenceGroup);
+
+        /// <summary>
+        /// 运行时反序列化
+        /// </summary>
+        /// <param name="testProjectStr">待反序列化的TestProject</param>
+        ITestProject RuntimeDeserializeTestProject(string testProjectStr);
+
+        /// <summary>
+        /// 运行时反序列化
+        /// </summary>
+        /// <param name="sequenceGroupStr">待反序列化的SequecneGroup</param>
+        ISequenceGroup RuntimeDeserializeSequenceGroup(string sequenceGroupStr);
 
         #endregion
+
+        #region 序列数据操作
+
+        /// <summary>
+        /// 生效序列数据，处理所有连带配置
+        /// </summary>
+        void ValidateSequenceData(ITestProject testProject);
+
+        /// <summary>
+        /// 生效序列数据，处理所有连带配置
+        /// </summary>
+        void ValidateSequenceData(ISequenceGroup sequenceGroup);
+
+        #endregion
+
 
     }
 }

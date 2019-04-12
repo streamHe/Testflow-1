@@ -1,9 +1,11 @@
-﻿namespace Testflow.Data.Sequence
+﻿using Testflow.Common;
+
+namespace Testflow.Data.Sequence
 {
     /// <summary>
     /// 序列流程容器的基类
     /// </summary>
-    public interface ISequenceFlowContainer : ISequenceElement
+    public interface ISequenceFlowContainer : ISequenceElement, ICloneableClass<ISequenceFlowContainer>
     {
         /// <summary>
         /// 名称
@@ -14,5 +16,16 @@
         /// 描述信息
         /// </summary>
         string Description { get; set; }
+
+        /// <summary>
+        /// 上级流程容器
+        /// </summary>
+        ISequenceFlowContainer Parent { get; set; }
+
+        /// <summary>
+        /// 使用父级对象初始化
+        /// </summary>
+        /// <param name="parent"></param>
+        void Initialize(ISequenceFlowContainer parent);
     }
 }

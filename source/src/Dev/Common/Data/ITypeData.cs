@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Testflow.Data.Sequence;
 
 namespace Testflow.Data
 {
     /// <summary>
     /// 保存类型信息
     /// </summary>
-    public interface ITypeData
+    public interface ITypeData : ISequenceElement
     {
 //        /// <summary>
 //        /// 类型数据在当前容器中的索引
@@ -27,24 +29,5 @@ namespace Testflow.Data
         /// 类型名称
         /// </summary>
         string Name { get; set; }
-
-        /// <summary>
-        /// 获取该类型的完整名称
-        /// </summary>
-        [XmlIgnore]
-        string GetFullName { get; }
-
-        /// <summary>
-        /// 判断两个类型是否相等
-        /// </summary>
-        /// <param name="fullName">类型的完整名称</param>
-        /// <returns></returns>
-        bool Eqauls(string fullName);
-
-//        /// <summary>
-//        /// 类型的Type对象
-//        /// </summary>
-//        [XmlIgnore]
-//        Type Type { get; set; }
     }
 }
